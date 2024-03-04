@@ -17,7 +17,7 @@ jobs:
       id: check-weekend
       run: |
         day=$(date +'%u')
-        if [ "$day" -gt 5 ]; then
+        if [ "$day" -eq 1 ]; then
           echo "Today is a weekend, skipping the workflow."
           exit 0
         fi
