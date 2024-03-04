@@ -23,17 +23,14 @@ jobs:
         fi
 
     - name: Checkout Repository
-      if: steps.check-weekend.outputs.skip == 'false'
       uses: actions/checkout@v4
 
     - name: Initialize Git
-      if: steps.check-weekend.outputs.skip == 'false'
       run: |
         git config --global user.email "solovyev.a@icloud.com"
         git config --global user.name "Aleksey Solovyev"
 
     - name: Generate Commits
-      if: steps.check-weekend.outputs.skip == 'false'
       id: generate-commits
       run: |
         N=$((-3 + $RANDOM % 21))
@@ -48,7 +45,7 @@ jobs:
         echo "num-commits=$N" >> $GITHUB_OUTPUT
 
     - name: Push Changes
-      if: steps.check-weekend.outputs.skip == 'false' && steps.generate-commits.outputs.num-commits > 0
+      if: steps.generate-commits.outputs.num-commits > 0
       run: |
         echo Update README with timestamp
         echo -e "# README\n\nLast update: $(date)" > README.md
