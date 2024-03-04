@@ -9,6 +9,8 @@ permissions:
 jobs:
   check-weekend:
     runs-on: ubuntu-latest
+    outputs:
+      is_weekend: ${{ steps.check-weekend.outputs.is_weekend }}
 
     steps:
     - name: Check if it's a weekend
