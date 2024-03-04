@@ -17,7 +17,7 @@ jobs:
         day=$(date +'%u')
         if [ "$day" -eq 1 ]; then
           echo "Today is a weekend, skipping the workflow."
-          exit 0
+          exit 1
         fi
 
   generate-random-commits:
