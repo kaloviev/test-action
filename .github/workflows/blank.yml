@@ -15,7 +15,7 @@ jobs:
       id: check-weekend
       run: |
         day=$(date +'%u')
-        if [ "$day" -eq 1 ]; then
+        if [ "$day" -gr 5 ]; then
           echo "Today is a weekend, skipping the workflow."
           echo "is_weekend=true" >> $GITHUB_OUTPUT
         else
