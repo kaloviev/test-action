@@ -17,15 +17,15 @@ jobs:
         day=$(date +'%u')
         if [ "$day" -gr 5 ]; then
           echo "Today is a weekend, skipping the workflow."
-          echo "is_weekend=true" >> $GITHUB_OUTPUT
+          echo "is_weekend=0" >> $GITHUB_OUTPUT
         else
-          echo "is_weekend=false" >> $GITHUB_OUTPUT
+          echo "is_weekend=1" >> $GITHUB_OUTPUT
         fi
 
   generate-random-commits:
     runs-on: ubuntu-latest
     needs: check-weekend
-    if: needs.check-weekend.outputs.is_weekend > 0
+    if: needs.check-weekend.outputs.is_weekend == 1
 
     steps:
     - name: Checkout Repository
