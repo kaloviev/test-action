@@ -1,0 +1,57 @@
+name: Daily Random Commits
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Run the workflow every day at midnight
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-random-commits:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check if it's a weekend
+      id: check-weekend
+      run: |
+        day=$(date +'%u')
+        if [ "$day" -eq 1 ]; then
+          echo "Today is a weekend, skipping the workflow."
+          exit 0
+        fi
+
+    - name: Checkout Repository
+      if: steps.check-weekend.outputs.skip == 'false'
+      uses: actions/checkout@v4
+
+    - name: Initialize Git
+      if: steps.check-weekend.outputs.skip == 'false'
+      run: |
+        git config --global user.email "solovyev.a@icloud.com"
+        git config --global user.name "Aleksey Solovyev"
+
+    - name: Generate Commits
+      if: steps.check-weekend.outputs.skip == 'false'
+      id: generate-commits
+      run: |
+        N=$((-3 + $RANDOM % 21))
+        for ((i=1; i<=$N; i++)); do
+            random_number=$((RANDOM % 100))
+            echo "Random commit $i: $random_number" >> README.md
+            git add README.md
+            git commit -m "Random commit $i"
+        done
+
+        echo Number of commits: $N
+        echo "num-commits=$N" >> $GITHUB_OUTPUT
+
+    - name: Push Changes
+      if: steps.check-weekend.outputs.skip == 'false' && steps.generate-commits.outputs.num-commits > 0
+      run: |
+        echo Update README with timestamp
+        echo -e "# README\n\nLast update: $(date)" > README.md
+        git add README.md
+        git commit -am "feat: update README"
+        git push
